@@ -3,11 +3,18 @@ import { motion } from 'framer-motion';
 import { Play, Eye, Instagram, ChevronLeft, ChevronRight, Clapperboard } from 'lucide-react';
 import { apiGet, INSTAGRAM_URL, INSTAGRAM_HANDLE } from '../lib/api';
 type Reel = { id: number; title: string; thumbnail_url: string; instagram_url: string; views: string; duration: string };
+const fallbackReels: Reel[] = [
+  { id: 1, title: 'Empty hall to dream mandap', thumbnail_url: '/images/reel-1.jpg', instagram_url: INSTAGRAM_URL, views: '12.4K', duration: '0:30' },
+  { id: 2, title: 'A haldi morning in marigold', thumbnail_url: '/images/reel-2.jpg', instagram_url: INSTAGRAM_URL, views: '8.7K', duration: '0:24' },
+  { id: 3, title: 'The details make the day', thumbnail_url: '/images/reel-3.jpg', instagram_url: INSTAGRAM_URL, views: '6.1K', duration: '0:28' },
+  { id: 4, title: 'Reception stage transformation', thumbnail_url: '/images/reel-4.jpg', instagram_url: INSTAGRAM_URL, views: '9.3K', duration: '0:31' },
+  { id: 5, title: 'Pastel baby shower setup', thumbnail_url: '/images/reel-5.jpg', instagram_url: INSTAGRAM_URL, views: '5.8K', duration: '0:26' },
+];
 export default function Reels() {
   const [reels, setReels] = useState<Reel[]>([]);
   const [loading, setLoading] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
-  useEffect(() => { apiGet('/api/reels').then(d => setReels(d)).catch(console.error).finally(() => setLoading(false)); }, []);
+  useEffect(() => { apiGet('/api/reels').then(d => setReels(Array.isArray(d) && d.length ? d : fallbackReels)).catch(() => setReels(fallbackReels)).finally(() => setLoading(false)); }, []);
   const scroll = (dir: number) => { scrollRef.current?.scrollBy({ left: dir * 300, behavior: 'smooth' }); };
   return (
     <section id="reels" className="bg-gradient-to-b from-[#1c0d12] via-[#2a0f18] to-[#1c0d12] py-16 sm:py-24 relative overflow-hidden">

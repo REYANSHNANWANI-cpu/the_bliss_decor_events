@@ -11,6 +11,17 @@ const cats = [
   { label: 'Baby Shower', match: 'Baby Shower' },
   { label: 'Corporate & Events', match: 'Corporate' },
 ];
+const fallbackItems: Item[] = [
+  { id: 1, title: 'Royal Marigold Entry', category: 'Wedding', image_url: '/images/gallery-wedding-1.jpg', event_type: 'Wedding', location: 'Sangli', likes: 128 },
+  { id: 2, title: 'Pastel Orchid Stage', category: 'Wedding', image_url: '/images/gallery-wedding-2.jpg', event_type: 'Engagement', location: 'Miraj', likes: 96 },
+  { id: 3, title: 'Traditional Maharashtrian Mandap', category: 'Wedding', image_url: '/images/gallery-wedding-3.jpg', event_type: 'Wedding', location: 'Kupwad', likes: 114 },
+  { id: 4, title: 'Sunshine Haldi Morning', category: 'Haldi & Mehndi', image_url: '/images/gallery-haldi-1.jpg', event_type: 'Haldi & Mehndi', location: 'Sangli', likes: 87 },
+  { id: 5, title: 'Emerald Mehndi Night', category: 'Haldi & Mehndi', image_url: '/images/gallery-mehndi-1.jpg', event_type: 'Haldi & Mehndi', location: 'Kolhapur', likes: 103 },
+  { id: 6, title: 'Jungle First Birthday', category: 'Birthday', image_url: '/images/gallery-birthday-1.jpg', event_type: 'Birthday', location: 'Sangli', likes: 74 },
+  { id: 7, title: 'Princess Theme Party', category: 'Birthday', image_url: '/images/gallery-birthday-2.jpg', event_type: 'Birthday', location: 'Miraj', likes: 91 },
+  { id: 8, title: 'Peach & Mint Shower', category: 'Baby Shower', image_url: '/images/gallery-baby-1.jpg', event_type: 'Baby Shower', location: 'Sangli', likes: 68 },
+  { id: 9, title: 'Annual Awards Night', category: 'Corporate', image_url: '/images/gallery-corporate-1.jpg', event_type: 'Corporate & Events', location: 'Sangli', likes: 55 },
+];
 export default function Gallery() {
   const [allItems, setAllItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
@@ -18,8 +29,8 @@ export default function Gallery() {
   const [lightbox, setLightbox] = useState<Item | null>(null);
   useEffect(() => {
     apiGet('/api/gallery')
-      .then(d => setAllItems(d))
-      .catch(console.error)
+      .then(d => setAllItems(Array.isArray(d) && d.length ? d : fallbackItems))
+      .catch(() => setAllItems(fallbackItems))
       .finally(() => setLoading(false));
   }, []);
   const norm = (s: string) => s.toLowerCase();
